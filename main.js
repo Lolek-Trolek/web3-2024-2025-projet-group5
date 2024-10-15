@@ -1,6 +1,6 @@
 // Importation des modules nécessaires d'Electron
-const { app, BrowserWindow } = require("electron");
-// Importation du module 'path' pour gérer les chemins de fichiers
+const { app, BrowserWindow, ipcMain } = require("electron"); // Ajout de ipcMain pour gérer la communication
+const os = require("os"); // Importation du module os pour récupérer les infos système
 const path = require("path");
 
 let mainWindow; // Variable pour stocker la référence à la fenêtre principale
@@ -12,8 +12,8 @@ function createWindow() {
     height: 800, // Hauteur de la fenêtre
     webPreferences: {
       preload: path.join(__dirname, "preload.js"), // Chargement du fichier preload avant l'exécution du script de l'application
-      nodeIntegration: true, // Permet l'utilisation de Node.js dans les pages web
-      contextIsolation: false, // Désactive l'isolement du contexte pour permettre l'accès direct à l'API Node
+      nodeIntegration: false, // Désactivation de l'intégration de Node.js pour des raisons de sécurité
+      contextIsolation: true, // Activation de l'isolation du contexte pour plus de sécurité
     },
   });
 
@@ -45,4 +45,15 @@ app.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
   }
+});
+
+// Gestion des informations système via IPC
+ipcMain.handle("get-system-info", () => {
+  return {
+    platform: os.platform(), // Système d'exploitation
+    cpuCores: os.cpus().length, // Nombre de cœurs CPU
+    totalMemory: (os.totalmem() / (1024 ** 3)).toFixed(2) + " GB", // Mémoire totale (en Go)
+    freeMemory: (os.freemem() / (1024 ** 3)).toFixed(2) + " GB", // Mémoire disponible (en Go)
+    networkInterfaces: os.networkInterfaces(), // Interfaces réseau
+  };
 });

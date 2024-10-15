@@ -7,6 +7,7 @@ import App from './App'; // Importation du composant principal de l'application
 import theme from './theme'; // Importation du thème personnalisé de Material-UI
 import './stylesheet/index.css'; // Importation de la feuille de styles CSS
 
+
 // Création d'une instance ApolloClient pour la gestion des requêtes GraphQL
 const client = new ApolloClient({
   uri: 'http://localhost:4000', // URL du serveur GraphQL
