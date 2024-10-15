@@ -1,9 +1,9 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "./components/ui/button";
 
 function App() {
   return (
     <div>
-      <Button color="red">Hello there !</Button>
+      <Button>Hello there !</Button>
     </div>
   );
 }
