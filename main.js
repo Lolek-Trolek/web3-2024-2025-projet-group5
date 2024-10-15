@@ -18,7 +18,7 @@ async function createWindow() {
   });
 
   const startURL = isDev
-    ? "http://localhost:3000"
+    ? "http://localhost:5173"
     : `file://${path.join(__dirname, "/frontend/build/index.html")}`;
 
   mainWindow.loadURL(startURL);
