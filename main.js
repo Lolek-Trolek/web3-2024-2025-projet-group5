@@ -39,3 +39,11 @@ app.on("activate", () => {
     createWindow();
   }
 });
+
+// listen to event open-dialog sent by frontend
+ipcMain.handle("open-dialog", async () => {
+  const result = await dialog.showOpenDialog({
+    properties: ["openFile", "multiSelections"],
+  });
+  return result.filePaths;
+});
