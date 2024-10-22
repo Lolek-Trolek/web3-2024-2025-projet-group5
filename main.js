@@ -5,6 +5,7 @@ const {
   Notification,
   Menu,
   dialog,
+  shell,
 } = require("electron");
 const path = require("path");
 
@@ -85,4 +86,8 @@ ipcMain.handle("open-dialog", async () => {
     properties: ["openFile", "multiSelections"],
   });
   return result.filePaths;
+});
+
+ipcMain.handle("show-in-item-folder", async (event, args) => {
+  shell.showItemInFolder(args);
 });

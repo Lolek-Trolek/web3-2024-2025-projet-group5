@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Dialog from "./components/Dialog";
 import { Button } from "./components/ui/button";
+import ItemFolder from "./components/ItemFolder";
 
 function App() {
   const [filePaths, setFilePaths] = useState([]);
@@ -17,6 +18,7 @@ function App() {
           <p>{element}</p>
         ))}
         <Dialog callback={setFilePaths} />
+        <ItemFolder fullPath={filePaths[0]} />
       </div>
     </div>
   );
