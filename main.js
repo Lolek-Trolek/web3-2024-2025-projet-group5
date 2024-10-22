@@ -81,9 +81,27 @@ ipcMain.handle("show-notification", (event, args) => {
   new Notification(args).show();
 });
 
-ipcMain.handle("open-dialog", async () => {
+ipcMain.handle("open-dialog", async (event, args) => {
+  let filters = [];
+  switch (args) {
+    case "image":
+      filters.push({ name: "Images", extensions: ["jpg", "png", "gif"] });
+      break;
+
+    case "pdf":
+      filters.push({ name: "PDFs", extensions: ["pdf"] });
+      break;
+
+    case "all":
+      filters.push({ name: "All Types", extensions: ["*"] });
+      break;
+
+    default:
+      break;
+  }
   const result = await dialog.showOpenDialog({
     properties: ["openFile"],
+    filters: filters,
   });
 
   return result;
