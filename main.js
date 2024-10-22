@@ -1,4 +1,11 @@
-const { app, BrowserWindow, ipcMain, Notification, Menu } = require("electron");
+const {
+  app,
+  BrowserWindow,
+  ipcMain,
+  Notification,
+  Menu,
+  dialog,
+} = require("electron");
 const path = require("path");
 
 const isDev = !app.isPackaged;
@@ -71,4 +78,11 @@ app.on("activate", () => {
 
 ipcMain.handle("show-notification", (event, args) => {
   new Notification(args).show();
+});
+
+ipcMain.handle("open-dialog", async () => {
+  const result = await dialog.showOpenDialog({
+    properties: ["openFile", "multiSelections"],
+  });
+  return result.filePaths;
 });
