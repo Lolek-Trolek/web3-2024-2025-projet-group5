@@ -5,7 +5,7 @@ export default function Dialog({ callback }) {
   const handleClick = async () => {
     const filePath = await window.electron
       .openDialog()
-      .then((result) => result.filePaths[0]);
+      .then((result) => (result.canceled ? "/" : result.filePaths[0]));
 
     callback(filePath);
   };
