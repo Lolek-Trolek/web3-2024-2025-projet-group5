@@ -4,7 +4,7 @@ import { Button } from "./components/ui/button";
 import ItemFolder from "./components/ItemFolder";
 
 function App() {
-  const [filePaths, setFilePaths] = useState([]);
+  const [filePath, setFilePath] = useState("/");
 
   const handleClick = () => {
     window.electron.showNotification({ title: "Notification", body: "Hey" });
@@ -18,11 +18,9 @@ function App() {
           <Button onClick={handleClick}>Show Notification</Button>
         </div>
         <div className="flex justify-center items-center min-h-32 bg-slate-300 rounded-xl">
-          {filePaths.map((element) => (
-            <p>{element}</p>
-          ))}
-          <Dialog callback={setFilePaths} />
-          <ItemFolder fullPath={filePaths[0]} />
+          File: {filePath}
+          <Dialog callback={setFilePath} />
+          <ItemFolder fullPath={filePath} />
         </div>
       </div>
     </div>
