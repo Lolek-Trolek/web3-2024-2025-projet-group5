@@ -2,12 +2,12 @@ import { Button } from "./components/ui/button";
 
 function App() {
   const handleClick = () => {
-    window.electron.showNotification({ title: "hey", body: "hey 2" });
+    window.electron.showNotification({ title: "Notification", body: "Hey" });
   };
 
   return (
     <div>
-      <Button onClick={handleClick}>Hello there !</Button>
+      <Button onClick={handleClick}>Show Notification</Button>
     </div>
   );
 }
