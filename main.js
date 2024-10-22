@@ -1,12 +1,11 @@
 const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("path");
 
-let isDev;
+const isDev = !app.isPackaged;
+
 let mainWindow;
 
 async function createWindow() {
-  isDev = (await import("electron-is-dev")).default;
-
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
@@ -18,7 +17,7 @@ async function createWindow() {
   });
 
   const startURL = isDev
-    ? "http://localhost:3000"
+    ? "http://localhost:5173"
     : `file://${path.join(__dirname, "/frontend/build/index.html")}`;
 
   mainWindow.loadURL(startURL);
