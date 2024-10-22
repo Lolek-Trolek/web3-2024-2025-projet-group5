@@ -17,7 +17,7 @@ function App() {
         <div className="flex justify-center items-center min-h-32 bg-slate-300 rounded-xl">
           <Button onClick={handleClick}>Show Notification</Button>
         </div>
-        <div className="flex justify-center items-center min-h-32 bg-slate-300 rounded-xl">
+        <div className="flex flex-col justify-center items-center gap-2 p-2 min-h-32 min-w-fit bg-slate-300 rounded-xl">
           File: {filePath}
           <Dialog callback={setFilePath} />
           <ItemFolder fullPath={filePath} />
