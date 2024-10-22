@@ -83,9 +83,10 @@ ipcMain.handle("show-notification", (event, args) => {
 
 ipcMain.handle("open-dialog", async () => {
   const result = await dialog.showOpenDialog({
-    properties: ["openFile", "multiSelections"],
+    properties: ["openFile"],
   });
-  return result.filePaths;
+
+  return result;
 });
 
 ipcMain.handle("show-in-item-folder", async (event, args) => {

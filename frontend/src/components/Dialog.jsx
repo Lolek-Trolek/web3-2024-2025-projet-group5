@@ -3,7 +3,11 @@ import { Button } from "./ui/button";
 
 export default function Dialog({ callback }) {
   const handleClick = async () => {
-    callback(await window.electron.openDialog());
+    const filePath = await window.electron
+      .openDialog()
+      .then((result) => result.filePaths[0]);
+
+    callback(filePath);
   };
 
   return (
