@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu } = require("electron");
+const { app, BrowserWindow, ipcMain, Notification, Menu } = require("electron");
 const path = require("path");
 
 const isDev = !app.isPackaged;
@@ -67,4 +67,8 @@ app.on("activate", () => {
   if (mainWindow === null) {
     createWindow();
   }
+});
+
+ipcMain.handle("show-notification", (event, args) => {
+  new Notification(args).show();
 });
