@@ -26,7 +26,10 @@ async function createWindow() {
   mainWindow.on("closed", () => (mainWindow = null));
 }
 
-app.on("ready", createWindow);
+app.on("ready", () => {
+  app.commandLine.appendSwitch('disable-gpu');
+  createWindow();
+});
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
@@ -42,37 +45,35 @@ app.on("activate", () => {
 
 
 //------ pop up pour drag and drop -------//
-function createPopupWindow(componentName, dataFromMain) {
+function createDragAndDropPopupWindow() {
   const popupWindow = new BrowserWindow({
-    width: 400,
-    height: 300,
+    width: 400, // tu peux ajuster la taille si nécessaire
+    height: 400,
     parent: mainWindow,
     modal: true,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
-      nodeIntegration: false,
       contextIsolation: true,
+      enableRemoteModule: false,
     },
   });
 
-  // Charger la même vue générique pour toutes les popups
   const popupURL = isDev
-      ? "http://localhost:3000/#/Popup"
-      : `file://${path.join(__dirname, "frontend/build/index.html#/Popup")}`; // Route spécifique pour la production
+      ? "http://localhost:3000/#/drag-and-drop"
+      : `file://${path.join(__dirname, "frontend/build/index.html#drag-and-drop")}`;
+
+
   popupWindow.loadURL(popupURL);
 
-  // Envoyer le nom du composant et les données à la vue popup après le chargement
+  // Envoyer des données après le chargement
   popupWindow.webContents.once("did-finish-load", () => {
-    popupWindow.webContents.send("init-data", { componentName, data: dataFromMain });
+    popupWindow.webContents.send("init-data", { message: "Bienvenue dans le drag-and-drop!" });
   });
 
-  // Récupérer les données depuis la popup (si nécessaire)
-  ipcMain.once("popup-data", (event, data) => {
-    mainWindow.webContents.send("popup-response", data);
-  });
+
 }
 
 // Écoute l'IPC pour créer des popups avec des composants dynamiques
-ipcMain.on('open-popup', (event, data) => {
-  createPopupWindow(data.component, data.message);
+ipcMain.on('open-popup', (event) => {
+  createDragAndDropPopupWindow();
 });

@@ -4,22 +4,30 @@ function DragAndDrop() {
     const [popupContent, setPopupContent] = useState(null);
 
     useEffect(() => {
-        // Écouter les données transmises par Electron via IPC
-        window.electronAPI.onInitData((event, data) => {
-            setPopupContent(data.message);  // Récupérer les données
-        });
-    }, []); // Assurez-vous d'avoir le tableau de dépendances pour éviter des appels répétés
+        const handleInitData = (event, data) => {
+            setPopupContent(data.message);
+        };
+
+        window.electronAPI.onInitData(handleInitData);
+
+        // Nettoyer l'écouteur au démontage
+        return () => {
+            window.electronAPI.onInitData((event, _) => {}); // Pour éviter les réinitialisations multiples
+        };
+    }, []);
 
     const sendDataToMain = (data) => {
-        window.electronAPI.sendPopupData(data);  // Envoyer des données au processus principal
+        window.electronAPI.sendPopupData(data);
     };
 
     return (
         <div>
             <h1>Popup Drag and Drop</h1>
             <p>{popupContent}</p>
-            <button onClick={() => sendDataToMain("Image stylée et tout mamaw")}>Envoyer l'image</button>
-            {/* Autres logiques du drag and drop ici */}
+            <button onClick={() => sendDataToMain("Image stylée et tout mamaw")}>
+                Envoyer l'image
+            </button>
+            {/* Autres logiques de drag-and-drop */}
         </div>
     );
 }
