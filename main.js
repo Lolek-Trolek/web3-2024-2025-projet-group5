@@ -21,7 +21,7 @@ async function createWindow() {
     ? "http://localhost:3000"
     : `file://${path.join(__dirname, "/frontend/build/index.html")}`;
 
-  mainWindow.loadURL(startURL);
+  await mainWindow.loadURL(startURL);
 
   mainWindow.on("closed", () => (mainWindow = null));
 }
@@ -42,8 +42,8 @@ app.on("activate", () => {
 
 
 //------ pop up pour drag and drop -------//
-function createPopupWindow(dataFromMain) {
-  popupWindow = new BrowserWindow({
+function createPopupWindow(componentName, dataFromMain) {
+  const popupWindow = new BrowserWindow({
     width: 400,
     height: 300,
     parent: mainWindow,
@@ -55,20 +55,24 @@ function createPopupWindow(dataFromMain) {
     },
   });
 
-  popupWindow.loadFile("popup.html");
+  // Charger la même vue générique pour toutes les popups
+  const popupURL = isDev
+      ? "http://localhost:3000/#/Popup"
+      : `file://${path.join(__dirname, "frontend/build/index.html#/Popup")}`; // Route spécifique pour la production
+  popupWindow.loadURL(popupURL);
 
-  // Transmettre les données à la popup
+  // Envoyer le nom du composant et les données à la vue popup après le chargement
   popupWindow.webContents.once("did-finish-load", () => {
-    popupWindow.webContents.send("init-data", dataFromMain);
+    popupWindow.webContents.send("init-data", { componentName, data: dataFromMain });
   });
 
+  // Récupérer les données depuis la popup (si nécessaire)
   ipcMain.once("popup-data", (event, data) => {
     mainWindow.webContents.send("popup-response", data);
   });
 }
 
-// Écoute l'IPC pour créer des popups avec des données dynamiques
-ipcMain.on("open-popup", (event, data) => {
-  createPopupWindow(data);
+// Écoute l'IPC pour créer des popups avec des composants dynamiques
+ipcMain.on('open-popup', (event, data) => {
+  createPopupWindow(data.component, data.message);
 });
-
