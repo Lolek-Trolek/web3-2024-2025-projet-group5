@@ -39,3 +39,36 @@ app.on("activate", () => {
     createWindow();
   }
 });
+
+
+//------ pop up pour drag and drop -------//
+function createPopupWindow(dataFromMain) {
+  popupWindow = new BrowserWindow({
+    width: 400,
+    height: 300,
+    parent: mainWindow,
+    modal: true,
+    webPreferences: {
+      preload: path.join(__dirname, "preload.js"),
+      nodeIntegration: false,
+      contextIsolation: true,
+    },
+  });
+
+  popupWindow.loadFile("popup.html");
+
+  // Transmettre les données à la popup
+  popupWindow.webContents.once("did-finish-load", () => {
+    popupWindow.webContents.send("init-data", dataFromMain);
+  });
+
+  ipcMain.once("popup-data", (event, data) => {
+    mainWindow.webContents.send("popup-response", data);
+  });
+}
+
+// Écoute l'IPC pour créer des popups avec des données dynamiques
+ipcMain.on("open-popup", (event, data) => {
+  createPopupWindow(data);
+});
+
