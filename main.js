@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog } = require("electron");
+const { app, BrowserWindow, ipcMain, Notification, Menu } = require("electron");
 const path = require("path");
 
 const isDev = !app.isPackaged;
@@ -25,6 +25,36 @@ async function createWindow() {
   mainWindow.on("closed", () => (mainWindow = null));
 }
 
+const menuTemplate = [
+  {
+    label: "File",
+    submenu: [
+      {
+        label: "Settings",
+        click: () => {
+          // TODO
+        },
+      },
+    ],
+  },
+];
+
+if (isDev)
+  menuTemplate.push({
+    label: "Dev",
+    submenu: [
+      {
+        label: "Open Dev Tools",
+        click: () => {
+          mainWindow.webContents.openDevTools();
+        },
+      },
+    ],
+  });
+
+const menu = Menu.buildFromTemplate(menuTemplate);
+Menu.setApplicationMenu(menu);
+
 app.on("ready", createWindow);
 
 app.on("window-all-closed", () => {
@@ -37,4 +67,8 @@ app.on("activate", () => {
   if (mainWindow === null) {
     createWindow();
   }
+});
+
+ipcMain.handle("show-notification", (event, args) => {
+  new Notification(args).show();
 });
