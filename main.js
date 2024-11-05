@@ -7,6 +7,7 @@ const {
   dialog,
   shell,
   clipboard,
+  nativeTheme,
 } = require("electron");
 const path = require("path");
 
@@ -92,7 +93,7 @@ app.on("activate", () => {
     createWindows();
   }
 });
-
+//Notification
 ipcMain.handle("show-notification", (event, args) => {
   new Notification(args).show();
 });
@@ -152,4 +153,18 @@ ipcMain.handle("read-clipboard", async () => {
 
 ipcMain.handle("write-clipboard", async (event, args) => {
   clipboard.writeText(args);
+});
+
+// Basculer le thème en fonction des choix de l'utilisateur
+ipcMain.handle("set-theme-source", (event, theme) => {
+  nativeTheme.themeSource = theme; // `theme` doit être 'light', 'dark' ou 'system'
+});
+
+ipcMain.handle("get-current-theme", () => {
+  return nativeTheme.shouldUseDarkColors ? "dark" : "light";
+});
+
+nativeTheme.on("updated", () => {
+  const isDarkMode = nativeTheme.shouldUseDarkColors;
+  mainWindow.webContents.send("theme-updated", isDarkMode ? "dark" : "light");
 });
