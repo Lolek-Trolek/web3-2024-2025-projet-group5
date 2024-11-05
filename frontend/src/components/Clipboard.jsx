@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
+import { ScrollArea } from "./ui/scroll-area";
 
 export default function Clipboard() {
   const [refresh, setRefresh] = useState(0);
@@ -12,7 +13,6 @@ export default function Clipboard() {
 
   useEffect(() => {
     window.electron.readClipboard().then((content) => setContent(content));
-    console.log(content);
   }, [refresh]);
 
   return (
@@ -28,7 +28,7 @@ export default function Clipboard() {
         {content.format === "image" ? (
           <img className="w-[300px] h-[300px]" src={content.content} />
         ) : (
-          <p>{content.content}</p>
+          <ScrollArea className="max-h-[300px]">{content.content}</ScrollArea>
         )}
       </div>
       <div className="w-1/2 flex flex-col justify-center items-center gap-2">
