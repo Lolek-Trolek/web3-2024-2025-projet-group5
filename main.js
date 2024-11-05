@@ -65,7 +65,7 @@ if (isDev)
 const menu = Menu.buildFromTemplate(menuTemplate);
 Menu.setApplicationMenu(menu);
 
-const iconName = path.join(__dirname, '/iconForDragAndDrop.png')
+const iconName = path.join(__dirname, '/iconForDragAndDrop.jpg')
 
 app.on("ready", createWindow);
 

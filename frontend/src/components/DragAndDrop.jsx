@@ -4,7 +4,7 @@ const DragAndDrop = () => {
   const handleDragStart = (event) => {
     event.preventDefault();
     console.log("DRAG STARTED!");
-    window.electron.startDrag('/iconForDragAndDrop.png');
+    window.electron.startDrag('/iconForDragAndDrop.jpg');
   };
 
   return (
