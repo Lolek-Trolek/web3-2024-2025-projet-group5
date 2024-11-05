@@ -13,7 +13,7 @@ const DragAndDrop = () => {
         draggable="true" 
         id="drag1" 
         onDragStart={handleDragStart}
-        className="w-16 h-16 bg-red-500 text-white flex items-center justify-center rounded-lg shadow-lg cursor-pointer"
+        className="border-2 border-gray-500 p-4 rounded-md"
       >
         Drag me
       </div>
