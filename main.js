@@ -13,8 +13,9 @@ const path = require("path");
 const isDev = !app.isPackaged;
 
 let mainWindow;
+let secondWindow;
 
-async function createWindow() {
+async function createWindows() {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
@@ -22,6 +23,18 @@ async function createWindow() {
       preload: path.join(__dirname, "preload.js"),
       nodeIntegration: true,
       contextIsolation: true,
+      additionalArguments: ["--isMainWindow"],
+    },
+  });
+
+  secondWindow = new BrowserWindow({
+    width: 400,
+    height: 300,
+    webPreferences: {
+      preload: path.join(__dirname, "preload.js"),
+      nodeIntegration: true,
+      contextIsolation: true,
+      additionalArguments: ["--isSecondWindow"],
     },
   });
 
@@ -30,8 +43,10 @@ async function createWindow() {
     : `file://${path.join(__dirname, "/frontend/build/index.html")}`;
 
   mainWindow.loadURL(startURL);
+  secondWindow.loadURL(startURL);
 
   mainWindow.on("closed", () => (mainWindow = null));
+  secondWindow.on("closed", () => (secondWindow = null));
 }
 
 const menuTemplate = [
@@ -64,7 +79,7 @@ if (isDev)
 const menu = Menu.buildFromTemplate(menuTemplate);
 Menu.setApplicationMenu(menu);
 
-app.on("ready", createWindow);
+app.on("ready", createWindows);
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
@@ -74,7 +89,7 @@ app.on("window-all-closed", () => {
 
 app.on("activate", () => {
   if (mainWindow === null) {
-    createWindow();
+    createWindows();
   }
 });
 
@@ -110,6 +125,19 @@ ipcMain.handle("open-dialog", async (event, args) => {
 
 ipcMain.handle("show-in-item-folder", async (event, args) => {
   shell.showItemInFolder(args);
+});
+
+// Gestion de la réception des messages
+ipcMain.on("send-to-second", (event, message) => {
+  if (secondWindow) {
+    secondWindow.webContents.send("message-from-main", message);
+  }
+});
+
+ipcMain.on("send-to-main", (event, message) => {
+  if (mainWindow) {
+    mainWindow.webContents.send("message-from-second", message);
+  }
 });
 
 ipcMain.handle("read-clipboard", async () => {
