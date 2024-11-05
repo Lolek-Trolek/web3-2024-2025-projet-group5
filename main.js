@@ -8,6 +8,7 @@ const {
   shell,
   clipboard,
   nativeTheme,
+  Tray,
 } = require("electron");
 const path = require("path");
 
@@ -80,7 +81,15 @@ if (isDev)
 const menu = Menu.buildFromTemplate(menuTemplate);
 Menu.setApplicationMenu(menu);
 
-app.on("ready", createWindows);
+const contextMenu = Menu.buildFromTemplate([
+  { label: "Quit", type: "normal", click: () => app.quit() },
+]);
+app.on("ready", () => {
+  const tray = new Tray(path.join(__dirname, "/logo.png"));
+  tray.setToolTip("Demo Electron");
+  tray.setContextMenu(contextMenu);
+  createWindows();
+});
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
@@ -88,11 +97,6 @@ app.on("window-all-closed", () => {
   }
 });
 
-app.on("activate", () => {
-  if (mainWindow === null) {
-    createWindows();
-  }
-});
 //Notification
 ipcMain.handle("show-notification", (event, args) => {
   new Notification(args).show();
