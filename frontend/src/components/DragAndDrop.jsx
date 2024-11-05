@@ -1,14 +1,10 @@
 import React from 'react';
 
 const DragAndDrop = () => {
-  // Handle drag start event
   const handleDragStart = (event) => {
     event.preventDefault();
     console.log("DRAG STARTED!");
-  
-    // Trigger the startDrag method in the main process via the exposed API
-     // Vérifiez que window.electron existe avant d'appeler startDrag
-      window.electron.startDrag('/iconForDragAndDrop.png');
+    window.electron.startDrag('/iconForDragAndDrop.png');
   };
 
   return (
@@ -16,7 +12,9 @@ const DragAndDrop = () => {
       <div 
         draggable="true" 
         id="drag1" 
-        onDragStart={handleDragStart}>
+        onDragStart={handleDragStart}
+        className="w-16 h-16 bg-red-500 text-white flex items-center justify-center rounded-lg shadow-lg cursor-pointer"
+      >
         Drag me
       </div>
     </div>
