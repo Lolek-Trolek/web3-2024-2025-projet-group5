@@ -4,6 +4,7 @@ import { Button } from "./components/ui/button";
 import ItemFolder from "./components/ItemFolder";
 import SendMessage from "./components/ipc/SendMessage";
 import Clipboard from "./components/Clipboard";
+import Theme from "./components/theme/ChangeTheme"
 
 function App() {
   const [filePath, setFilePath] = useState("/");
@@ -35,7 +36,11 @@ function App() {
       <div className="flex flex-col justify-center items-center gap-2 p-2 min-h-32 min-w-fit bg-slate-300 rounded-xl">
         <SendMessage isMainWindow={window.electron.isMainWindow} />
       </div>
+      <div className="flex flex-col justify-center items-center gap-2 p-2 min-h-32 min-w-fit bg-slate-300 rounded-xl">
+        <Theme />
+      </div>
     </div>
+    
   );
 }
 
