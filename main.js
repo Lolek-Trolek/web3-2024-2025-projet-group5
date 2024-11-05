@@ -9,6 +9,7 @@ const {
   clipboard,
   nativeTheme,
   Tray,
+  globalShortcut,
 } = require("electron");
 const path = require("path");
 
@@ -89,12 +90,19 @@ app.on("ready", () => {
   tray.setToolTip("Demo Electron");
   tray.setContextMenu(contextMenu);
   createWindows();
+  globalShortcut.register("CommandOrControl+H", () =>
+    mainWindow.webContents.send("shortcut", "CTRL/CMD+H")
+  );
 });
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
   }
+});
+
+app.on("will-quit", () => {
+  globalShortcut.unregisterAll();
 });
 
 //Notification
