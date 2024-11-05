@@ -19,5 +19,8 @@ contextBridge.exposeInMainWorld("electron", {
   writeClipboard: (args) => ipcRenderer.invoke("write-clipboard", args),
   setThemeSource: (theme) => ipcRenderer.invoke("set-theme-source", theme),
   getCurrentTheme: () => ipcRenderer.invoke("get-current-theme"),
-  onThemeUpdated: (callback) => ipcRenderer.on("theme-updated", (event, theme) => callback(theme)),
+  onThemeUpdated: (callback) =>
+    ipcRenderer.on("theme-updated", (event, theme) => callback(theme)),
+  onShortcut: (callback) =>
+    ipcRenderer.on("shortcut", (e, args) => callback(args)),
 });
