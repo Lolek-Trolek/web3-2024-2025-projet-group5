@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Dialog from "./components/Dialog";
 import { Button } from "./components/ui/button";
 import ItemFolder from "./components/ItemFolder";
 import SendMessage from "./components/ipc/SendMessage";
+import Clipboard from "./components/Clipboard";
 
 function App() {
   const [filePath, setFilePath] = useState("/");
@@ -25,6 +26,9 @@ function App() {
           <Dialog callback={setFilePath} />
           <ItemFolder fullPath={filePath} />
         </div>
+        <div className="min-h-32 bg-slate-300 rounded-xl">
+          <Clipboard />
+        </div>
       </div>
 
       {/* Composant SendMessage placé en dessous de la grille */}
@@ -32,7 +36,6 @@ function App() {
         <SendMessage isMainWindow={window.electron.isMainWindow} />
       </div>
     </div>
-
   );
 }
 

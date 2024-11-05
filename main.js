@@ -6,6 +6,7 @@ const {
   Menu,
   dialog,
   shell,
+  clipboard,
 } = require("electron");
 const path = require("path");
 
@@ -22,7 +23,7 @@ async function createWindows() {
       preload: path.join(__dirname, "preload.js"),
       nodeIntegration: true,
       contextIsolation: true,
-      additionalArguments: ["--isMainWindow"]
+      additionalArguments: ["--isMainWindow"],
     },
   });
 
@@ -33,7 +34,7 @@ async function createWindows() {
       preload: path.join(__dirname, "preload.js"),
       nodeIntegration: true,
       contextIsolation: true,
-      additionalArguments: ["--isSecondWindow"]
+      additionalArguments: ["--isSecondWindow"],
     },
   });
 
@@ -47,7 +48,6 @@ async function createWindows() {
   mainWindow.on("closed", () => (mainWindow = null));
   secondWindow.on("closed", () => (secondWindow = null));
 }
-
 
 const menuTemplate = [
   {
@@ -127,8 +127,8 @@ ipcMain.handle("show-in-item-folder", async (event, args) => {
   shell.showItemInFolder(args);
 });
 
- // Gestion de la réception des messages
- ipcMain.on("send-to-second", (event, message) => {
+// Gestion de la réception des messages
+ipcMain.on("send-to-second", (event, message) => {
   if (secondWindow) {
     secondWindow.webContents.send("message-from-main", message);
   }
@@ -140,3 +140,16 @@ ipcMain.on("send-to-main", (event, message) => {
   }
 });
 
+ipcMain.handle("read-clipboard", async () => {
+  let read = { format: "text", content: clipboard.readText("clipboard") };
+  if (!read.content)
+    read = {
+      format: "image",
+      content: clipboard.readImage("clipboard").toDataURL(),
+    };
+  return read;
+});
+
+ipcMain.handle("write-clipboard", async (event, args) => {
+  clipboard.writeText(args);
+});
