@@ -4,7 +4,8 @@ import { Button } from "./components/ui/button";
 import ItemFolder from "./components/ItemFolder";
 import SendMessage from "./components/ipc/SendMessage";
 import Clipboard from "./components/Clipboard";
-import Theme from "./components/theme/ChangeTheme"
+import Theme from "./components/theme/ChangeTheme";
+import ImageUploader from "./components/fork/ImageUploader"
 
 function App() {
   const [filePath, setFilePath] = useState("/");
@@ -30,6 +31,9 @@ function App() {
         <div className="min-h-32 bg-slate-300 rounded-xl">
           <Clipboard />
         </div>
+        <div className="min-h-32 bg-slate-300 rounded-xl">
+          <ImageUploader />
+        </div>
       </div>
 
       {/* Composant SendMessage placé en dessous de la grille */}
@@ -37,7 +41,7 @@ function App() {
         <SendMessage isMainWindow={window.electron.isMainWindow} />
       </div>
       <div className="flex flex-col justify-center items-center gap-2 p-2 min-h-32 min-w-fit bg-slate-300 rounded-xl">
-        <Theme />
+        <Theme  />
       </div>
     </div>
     

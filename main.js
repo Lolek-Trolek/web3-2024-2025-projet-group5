@@ -8,8 +8,13 @@ const {
   shell,
   clipboard,
   nativeTheme,
+  utilityProcess,
+ 
+  
 } = require("electron");
 const path = require("path");
+const { Worker } = require('worker_threads');
+
 
 const isDev = !app.isPackaged;
 
@@ -167,4 +172,32 @@ ipcMain.handle("get-current-theme", () => {
 nativeTheme.on("updated", () => {
   const isDarkMode = nativeTheme.shouldUseDarkColors;
   mainWindow.webContents.send("theme-updated", isDarkMode ? "dark" : "light");
+});
+
+ipcMain.handle('process-image', async (event, imagePath) => {
+  return new Promise((resolve, reject) => {
+    const worker = new Worker(path.join(__dirname, 'imageProcessor.js'));
+
+    // Envoyer le chemin de l'image au worker
+    worker.postMessage({ imagePath });
+
+    // Gérer le message reçu du worker
+    worker.on('message', (processedImagePath) => {
+      resolve(processedImagePath); // Résoudre la promesse avec le chemin de l'image traitée
+    });
+
+    // Gérer les erreurs du worker
+    worker.on('error', (error) => {
+      console.error("Erreur du worker :", error);
+      reject(error); // Rejeter la promesse en cas d'erreur
+    });
+
+    // Gérer la fermeture du worker
+    worker.on('exit', (code) => {
+      if (code !== 0) {
+        console.error(`Worker arrêté avec le code de sortie ${code}`);
+        reject(new Error(`Worker exited with code ${code}`));
+      }
+    });
+  });
 });
