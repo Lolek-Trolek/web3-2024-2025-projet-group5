@@ -6,6 +6,7 @@ const {
   Menu,
   dialog,
   shell,
+  clipboard,
 } = require("electron");
 const path = require("path");
 
@@ -109,4 +110,18 @@ ipcMain.handle("open-dialog", async (event, args) => {
 
 ipcMain.handle("show-in-item-folder", async (event, args) => {
   shell.showItemInFolder(args);
+});
+
+ipcMain.handle("read-clipboard", async () => {
+  let read = { format: "text", content: clipboard.readText("clipboard") };
+  if (!read.content)
+    read = {
+      format: "image",
+      content: clipboard.readImage("clipboard").toDataURL(),
+    };
+  return read;
+});
+
+ipcMain.handle("write-clipboard", async (event, args) => {
+  clipboard.writeText(args);
 });
