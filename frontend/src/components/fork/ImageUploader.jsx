@@ -13,7 +13,7 @@ function ImageUploader() {
     if (path) {
       // Lancer le traitement de l'image sélectionnée
       await window.electron.processImage(path);
-      console.log("Image traitée, rechargement...");
+      
       
       // Mettre à jour le timestamp pour recharger l'image traitée
       setTimestamp(Date.now());

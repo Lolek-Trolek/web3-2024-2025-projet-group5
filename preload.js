@@ -21,5 +21,5 @@ contextBridge.exposeInMainWorld("electron", {
   getCurrentTheme: () => ipcRenderer.invoke("get-current-theme"),
   onThemeUpdated: (callback) => ipcRenderer.on("theme-updated", (event, theme) => callback(theme)),
   processImage: (imagePath) => ipcRenderer.invoke('process-image', imagePath),
-  onImageProcessed: (callback) => ipcRenderer.on('image-processed', (event, data) => callback(data)),
+  
 });
