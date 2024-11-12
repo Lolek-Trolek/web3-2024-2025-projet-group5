@@ -9,8 +9,11 @@ const {
   clipboard,
   nativeTheme,
   Tray,
+  globalShortcut,
 } = require("electron");
 const path = require("path");
+const fs = require("fs");
+const https = require("https");
 
 const isDev = !app.isPackaged;
 
@@ -81,6 +84,8 @@ if (isDev)
 const menu = Menu.buildFromTemplate(menuTemplate);
 Menu.setApplicationMenu(menu);
 
+const iconName = path.join(__dirname, "/iconForDragAndDrop.jpg");
+
 const contextMenu = Menu.buildFromTemplate([
   { label: "Quit", type: "normal", click: () => app.quit() },
 ]);
@@ -89,12 +94,27 @@ app.on("ready", () => {
   tray.setToolTip("Demo Electron");
   tray.setContextMenu(contextMenu);
   createWindows();
+  globalShortcut.register("CommandOrControl+H", () =>
+    mainWindow.webContents.send("shortcut", "CTRL/CMD+H")
+  );
+});
+
+//Drag and drop
+ipcMain.on("ondragstart", (event, filePath) => {
+  event.sender.startDrag({
+    file: filePath,
+    icon: iconName,
+  });
 });
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
   }
+});
+
+app.on("will-quit", () => {
+  globalShortcut.unregisterAll();
 });
 
 //Notification
