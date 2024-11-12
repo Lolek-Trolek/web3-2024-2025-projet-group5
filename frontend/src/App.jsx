@@ -42,10 +42,6 @@ function App() {
             <ItemFolder fullPath={filePath} />
           </div>
 
-          <div className="lex justify-center items-center min-h-32 bg-slate-300 rounded-xl">
-            <DragAndDropIn />
-          </div>
-
           <div className="min-h-32 bg-slate-300 rounded-xl">
             <Clipboard />
           </div>
