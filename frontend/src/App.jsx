@@ -10,6 +10,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/hooks/use-toast";
 import DragAndDropOut from "@/components/dAndD/DragAndDropOut.jsx";
 import DaddyDrag from "@/components/dAndD/DaddyDrag.jsx";
+import OnlineStatus from "./components/OnlineStatus.jsx";
 
 function App() {
   const [filePath, setFilePath] = useState("/");
@@ -34,6 +35,10 @@ function App() {
         <div className="grid grid-cols-3 gap-4 m-2">
           <div className="flex justify-center items-center min-h-32 bg-slate-300 rounded-xl">
             <Button onClick={handleClick}>Show Notification</Button>
+          </div>
+
+          <div className="flex justify-center items-center min-h-32 bg-slate-300 rounded-xl">
+            <OnlineStatus />
           </div>
 
           <div className="flex flex-col justify-center items-center gap-2 p-2 min-h-32 min-w-fit bg-slate-300 rounded-xl">
