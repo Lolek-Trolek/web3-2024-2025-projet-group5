@@ -2,36 +2,30 @@ import React, { useState } from 'react';
 import { Button } from "../ui/button";
 
 function ImageUploader() {
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [processedImage, setProcessedImage] = useState('');
+  const defaultImagePath = 'img/output-image.jpg';
+  const [timestamp, setTimestamp] = useState(Date.now());
 
-  const handleImageChange = async (event) => {
-    console.log("handler");
-    const Path = await window.electron
-    .openDialog("image")
-    .then((result) => (result.canceled ? "/" : result.filePaths[0]));
-    console.log("chemin",Path)
-    setSelectedImage(Path);
-    // Attendre le chemin de l'image traitée
-    const processedImagePath = await window.electron.processImage(Path);
-    console.log("Image traitée :", processedImagePath);
-    
-    // Mettre à jour l'état avec le chemin de l'image traitée
-    if (processedImagePath) {
-        setProcessedImage(processedImagePath);
+  const handleImageChange = async () => {
+    const path = await window.electron
+      .openDialog("image")
+      .then((result) => (result.canceled ? null : result.filePaths[0]));
+
+    if (path) {
+      // Lancer le traitement de l'image sélectionnée
+      await window.electron.processImage(path);
+      console.log("Image traitée, rechargement...");
+      
+      // Mettre à jour le timestamp pour recharger l'image traitée
+      setTimestamp(Date.now());
     }
   };
-
-  // Écoute des messages du processus principal
-  window.electron.onImageProcessed((imagePath) => {
-    console.log("image procede",imagePath);
-    setProcessedImage(imagePath);
-  });
 
   return (
     <div>
       <Button onClick={handleImageChange}>Open file</Button>
-      {processedImage && <img src={processedImage} alt="Processed" />}
+      
+      {/* Forcer le rechargement de l'image en ajoutant le timestamp */}
+      <img src={`/${defaultImagePath}?timestamp=${timestamp}`} alt="Processed or Default" />
     </div>
   );
 }

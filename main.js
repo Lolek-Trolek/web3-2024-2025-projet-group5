@@ -183,7 +183,9 @@ ipcMain.handle('process-image', async (event, imagePath) => {
 
     // Gérer le message reçu du worker
     worker.on('message', (processedImagePath) => {
-      resolve(processedImagePath); // Résoudre la promesse avec le chemin de l'image traitée
+      // Envoyer uniquement le nom du fichier pour éviter les erreurs côté client
+      console.log("reponse du worker",processedImagePath);
+      resolve(path.basename(processedImagePath));
     });
 
     // Gérer les erreurs du worker
