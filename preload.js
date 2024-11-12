@@ -31,3 +31,8 @@ contextBridge.exposeInMainWorld("electron", {
   getSystemInfo: () => ipcRenderer.invoke('get-system-info'),
  
 });
+
+// Exposing system information API to the renderer process
+contextBridge.exposeInMainWorld('electronAPI', {
+  getSystemInfo: () => ipcRenderer.invoke('get-system-info'),
+});
