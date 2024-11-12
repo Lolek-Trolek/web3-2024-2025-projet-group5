@@ -2,12 +2,14 @@ import { useEffect, useState } from "react";
 import Dialog from "./components/Dialog";
 import { Button } from "./components/ui/button";
 import ItemFolder from "./components/ItemFolder";
-import DragAndDrop from "./components/DragAndDrop";
+import DragAndDropIn from "./components/dAndD/DragAndDropIn.jsx";
 import SendMessage from "./components/ipc/SendMessage";
 import Clipboard from "./components/Clipboard";
 import Theme from "./components/theme/ChangeTheme";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/hooks/use-toast";
+import DragAndDropOut from "@/components/dAndD/DragAndDropOut.jsx";
+import DaddyDrag from "@/components/dAndD/DaddyDrag.jsx";
 
 function App() {
   const [filePath, setFilePath] = useState("/");
@@ -41,7 +43,7 @@ function App() {
           </div>
 
           <div className="lex justify-center items-center min-h-32 bg-slate-300 rounded-xl">
-            <DragAndDrop />
+            <DragAndDropIn />
           </div>
 
           <div className="min-h-32 bg-slate-300 rounded-xl">
@@ -55,6 +57,9 @@ function App() {
         </div>
         <div className="flex flex-col justify-center items-center gap-2 p-2 min-h-32 min-w-fit bg-slate-300 rounded-xl">
           <Theme />
+        </div>
+        <div>
+          <DaddyDrag/>
         </div>
       </div>
       <Toaster />

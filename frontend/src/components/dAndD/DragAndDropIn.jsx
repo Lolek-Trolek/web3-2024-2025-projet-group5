@@ -1,8 +1,6 @@
-// NativeFileDropZone.js
 import React, { useState } from 'react';
 
-function DragAndDrop () {
-    const [files, setFiles] = useState([]);
+function DragAndDropIn({ addFile }) {
     const [isDragging, setIsDragging] = useState(false);
 
     const handleDragOver = (event) => {
@@ -24,7 +22,7 @@ function DragAndDrop () {
             preview: file.type.startsWith("image") ? URL.createObjectURL(file) : null,
         }));
 
-        setFiles((prevFiles) => [...prevFiles, ...fileData]);
+        addFile(fileData);  // Utilise la fonction passée en prop pour ajouter le fichier
     };
 
     return (
@@ -42,29 +40,8 @@ function DragAndDrop () {
             }}
         >
             <p>Déposez vos fichiers ici</p>
-
-            {files.length > 0 && (
-                <div style={{ marginTop: '20px' }}>
-                    <h3>Fichiers téléchargés :</h3>
-                    <ul>
-                        {files.map((fileData, index) => (
-                            <li key={index} style={{ marginBottom: '10px' }}>
-                                {fileData.preview ? (
-                                    <img
-                                        src={fileData.preview}
-                                        alt="Aperçu"
-                                        style={{ maxWidth: '100px', maxHeight: '100px', marginRight: '10px' }}
-                                    />
-                                ) : (
-                                    <span>{fileData.file.name}</span>
-                                )}
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            )}
         </div>
     );
 }
 
-export default DragAndDrop;
+export default DragAndDropIn;
