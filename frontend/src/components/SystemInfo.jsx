@@ -1,52 +1,46 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { Button } from './ui/button';
 
-function SystemInfo(){
-    /*
+function SystemInfo() {
   const [systemInfo, setSystemInfo] = useState({
-    cpuLoad: 'Loading...',
-    memoryUsage: 'Loading...',
-    batteryLevel: 'Loading...',
+    cpuLoad: '...',
+    memoryUsage: '...',
+    batteryLevel: '...',
   });
 
-  useEffect(() => {
-    window.electron.getSystemInfo().then((data) => {
-      setSystemInfo({
-        cpuLoad: `${data.cpuLoad}%`,
-        memoryUsage: `${data.memoryUsage}%`,
-        batteryLevel: data.batteryLevel === 'N/A' ? 'No Battery' : `${data.batteryLevel}%`,
+  const getSystemInfo = () => {
+    window.electron.getSystemInfo()
+      .then((result) => {
+        console.log(result);
+        
+
+        setSystemInfo({
+          cpuLoad: `${result.cpu.currentLoad} %`, 
+          memoryUsage: `${result.memory.memoryUsage} %`,
+          batteryLevel: result.battery.percent !== null
+            ? `${result.battery.percent} %`
+            : 'N/A', 
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        setSystemInfo({
+          cpuLoad: 'Error',
+          memoryUsage: 'Error',
+          batteryLevel: 'Error',
+        });
       });
-    });
-  }, []);
+  };
 
   return (
-    <div className="App">
+    <div>
       <h1>System Resource Monitor</h1>
+      <Button onClick={getSystemInfo}>Show System Info</Button>
       <h3>CPU Load: {systemInfo.cpuLoad}</h3>
       <h3>Memory Usage: {systemInfo.memoryUsage}</h3>
       <h3>Battery Level: {systemInfo.batteryLevel}</h3>
     </div>
   );
-  */
-
-    const getSystemInfo = () => {
-        window.electron.getSystemInfo().then((result) => {
-            console.log(result);
-        }).catch((err) => {
-            console.log(err);
-        });
-    }
-    
-
-  return (
-    <div>
-        <button onClick={getSystemInfo}>Show data</button>
-      <h1>System Resource Monitor</h1>
-      <h3>CPU Load: 1</h3>
-      <h3>Memory Usage:2</h3>
-    </div>
-  );
 }
-
-
 
 export default SystemInfo;
