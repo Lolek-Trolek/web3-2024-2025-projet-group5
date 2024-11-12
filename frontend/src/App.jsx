@@ -8,6 +8,7 @@ import Clipboard from "./components/Clipboard";
 import Theme from "./components/theme/ChangeTheme";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/hooks/use-toast";
+import  SystemInfo  from "./components/SystemInfo";
 
 function App() {
   const [filePath, setFilePath] = useState("/");
@@ -43,6 +44,12 @@ function App() {
           <div className="lex justify-center items-center min-h-32 bg-slate-300 rounded-xl">
             <DragAndDrop />
           </div>
+
+        
+          <div className="flex justify-center items-center min-h-32 bg-slate-300 rounded-xl">
+            <SystemInfo />
+          </div>
+
 
           <div className="min-h-32 bg-slate-300 rounded-xl">
             <Clipboard />

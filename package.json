@@ -16,6 +16,8 @@
     "wait-on": "^8.0.1"
   },
   "dependencies": {
-    "electron-is-dev": "^3.0.1"
+    "electron-is-dev": "^3.0.1",
+    "os": "^0.1.2",
+    "systeminformation": "^5.23.5"
   }
 }
