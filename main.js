@@ -23,6 +23,8 @@ const fs = require("fs");
 const https = require("https");
 const fs = require("fs");
 const https = require("https");
+const si = require("systeminformation");
+const os = require("os");
 
 const isDev = !app.isPackaged;
 
@@ -115,6 +117,35 @@ ipcMain.on("ondragstart", (event, filePath) => {
     icon: iconName,
   });
 });
+
+// System Info
+ipcMain.handle('get-system-info', async () => {
+  const totalMemory = os.totalmem();
+  const freeMemory = os.freemem();
+  const memoryUsage = ((totalMemory - freeMemory) / totalMemory) * 100;
+
+  const cpu = await si.currentLoad();
+  const battery = await si.battery();
+
+  const data = {
+    cpu: {
+      currentLoad: cpu.currentLoad.toFixed(2),
+    },
+    memory: {
+      totalMemory: (totalMemory / (1024 * 1024 * 1024)).toFixed(2),
+      usedMemory: ((totalMemory - freeMemory) / (1024 * 1024 * 1024)).toFixed(2),
+      freeMemory: (freeMemory / (1024 * 1024 * 1024)).toFixed(2),
+      memoryUsage: memoryUsage.toFixed(2)
+    },
+    battery: {
+      percent: battery.percent,
+      isCharging: battery.isCharging,
+    }
+  };
+
+  return data;
+});
+
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {

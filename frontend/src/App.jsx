@@ -2,15 +2,13 @@ import { useEffect, useState } from "react";
 import Dialog from "./components/Dialog";
 import { Button } from "./components/ui/button";
 import ItemFolder from "./components/ItemFolder";
-import DragAndDropIn from "./components/dAndD/DragAndDropIn.jsx";
-import DragAndDropIn from "./components/dAndD/DragAndDropIn.jsx";
 import SendMessage from "./components/ipc/SendMessage";
 import Clipboard from "./components/Clipboard";
 import Theme from "./components/theme/ChangeTheme";
 import ImageUploader from "./components/fork/ImageUploader";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/hooks/use-toast";
-import DragAndDropOut from "@/components/dAndD/DragAndDropOut.jsx";
+import  SystemInfo  from "./components/SystemInfo";
 import DaddyDrag from "@/components/dAndD/DaddyDrag.jsx";
 
 function App() {
@@ -42,6 +40,17 @@ function App() {
           <Dialog callback={setFilePath} />
           <ItemFolder fullPath={filePath} />
         </div>
+
+
+          <div className="lex justify-center items-center min-h-32 bg-slate-300 rounded-xl">
+            <DragAndDrop />
+          </div>
+
+        
+          <div className="flex justify-center items-center min-h-32 bg-slate-300 rounded-xl">
+            <SystemInfo />
+          </div>
+
         <div className="min-h-32 bg-slate-300 rounded-xl">
           <Clipboard />
         </div>
