@@ -41,12 +41,6 @@ function App() {
           <ItemFolder fullPath={filePath} />
         </div>
 
-
-          <div className="lex justify-center items-center min-h-32 bg-slate-300 rounded-xl">
-            <DragAndDrop />
-          </div>
-
-        
           <div className="flex justify-center items-center min-h-32 bg-slate-300 rounded-xl">
             <SystemInfo />
           </div>

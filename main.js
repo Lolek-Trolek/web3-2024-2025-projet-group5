@@ -9,18 +9,13 @@ const {
   clipboard,
   nativeTheme,
   utilityProcess,
- 
-  
   Tray,
   globalShortcut,
-  Tray,
-  globalShortcut,
+
 } = require("electron");
 const path = require("path");
 const { Worker } = require('worker_threads');
 
-const fs = require("fs");
-const https = require("https");
 const fs = require("fs");
 const https = require("https");
 const si = require("systeminformation");

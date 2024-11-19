@@ -1,11 +1,6 @@
 const { contextBridge, ipcRenderer } = require("electron");
 const path = require("node:path");
 
-console.log("Preload script running"); // Vérification
-const path = require("node:path");
-
-console.log("Preload script running"); // Vérification
-
 const isMainWindow = process.argv.includes("--isMainWindow");
 
 contextBridge.exposeInMainWorld("electron", {
