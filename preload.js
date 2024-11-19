@@ -1,8 +1,6 @@
 const { contextBridge, ipcRenderer } = require("electron");
 const path = require("node:path");
 
-console.log("Preload script running"); // Vérification
-
 const isMainWindow = process.argv.includes("--isMainWindow");
 
 contextBridge.exposeInMainWorld("electron", {
@@ -25,7 +23,12 @@ contextBridge.exposeInMainWorld("electron", {
   setThemeSource: (theme) => ipcRenderer.invoke("set-theme-source", theme),
   getCurrentTheme: () => ipcRenderer.invoke("get-current-theme"),
   onThemeUpdated: (callback) =>
+   
     ipcRenderer.on("theme-updated", (event, theme) => callback(theme)),
+  processImage: (imagePath) => ipcRenderer.invoke('process-image', imagePath),
+  
+  onShortcut: (callback) =>
+    ipcRenderer.on("shortcut", (e, args) => callback(args)),
   onShortcut: (callback) =>
     ipcRenderer.on("shortcut", (e, args) => callback(args)),
   getSystemInfo: () => ipcRenderer.invoke('get-system-info'),
