@@ -1,4 +1,7 @@
 const { contextBridge, ipcRenderer } = require("electron");
+const path = require("node:path");
+
+console.log("Preload script running"); // Vérification
 
 const isMainWindow = process.argv.includes("--isMainWindow");
 
@@ -6,6 +9,8 @@ contextBridge.exposeInMainWorld("electron", {
   showNotification: (args) => ipcRenderer.invoke("show-notification", args),
   openDialog: (args) => ipcRenderer.invoke("open-dialog", args),
   showInItemFolder: (args) => ipcRenderer.invoke("show-in-item-folder", args),
+  startDrag: (fileName) =>
+    ipcRenderer.send("ondragstart", path.join(process.cwd(), fileName)),
   isMainWindow,
   onMessageFromMain: (callback) =>
     ipcRenderer.on("message-from-main", callback),
@@ -19,7 +24,10 @@ contextBridge.exposeInMainWorld("electron", {
   writeClipboard: (args) => ipcRenderer.invoke("write-clipboard", args),
   setThemeSource: (theme) => ipcRenderer.invoke("set-theme-source", theme),
   getCurrentTheme: () => ipcRenderer.invoke("get-current-theme"),
-  onThemeUpdated: (callback) => ipcRenderer.on("theme-updated", (event, theme) => callback(theme)),
+  onThemeUpdated: (callback) =>
+    ipcRenderer.on("theme-updated", (event, theme) => callback(theme)),
   processImage: (imagePath) => ipcRenderer.invoke('process-image', imagePath),
   
+  onShortcut: (callback) =>
+    ipcRenderer.on("shortcut", (e, args) => callback(args)),
 });

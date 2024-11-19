@@ -11,10 +11,14 @@ const {
   utilityProcess,
  
   
+  Tray,
+  globalShortcut,
 } = require("electron");
 const path = require("path");
 const { Worker } = require('worker_threads');
 
+const fs = require("fs");
+const https = require("https");
 
 const isDev = !app.isPackaged;
 
@@ -85,7 +89,28 @@ if (isDev)
 const menu = Menu.buildFromTemplate(menuTemplate);
 Menu.setApplicationMenu(menu);
 
-app.on("ready", createWindows);
+const iconName = path.join(__dirname, "/iconForDragAndDrop.jpg");
+
+const contextMenu = Menu.buildFromTemplate([
+  { label: "Quit", type: "normal", click: () => app.quit() },
+]);
+app.on("ready", () => {
+  const tray = new Tray(path.join(__dirname, "/logo.png"));
+  tray.setToolTip("Demo Electron");
+  tray.setContextMenu(contextMenu);
+  createWindows();
+  globalShortcut.register("CommandOrControl+H", () =>
+    mainWindow.webContents.send("shortcut", "CTRL/CMD+H")
+  );
+});
+
+//Drag and drop
+ipcMain.on("ondragstart", (event, filePath) => {
+  event.sender.startDrag({
+    file: filePath,
+    icon: iconName,
+  });
+});
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
@@ -93,11 +118,10 @@ app.on("window-all-closed", () => {
   }
 });
 
-app.on("activate", () => {
-  if (mainWindow === null) {
-    createWindows();
-  }
+app.on("will-quit", () => {
+  globalShortcut.unregisterAll();
 });
+
 //Notification
 ipcMain.handle("show-notification", (event, args) => {
   new Notification(args).show();

@@ -2,21 +2,34 @@ import { useEffect, useState } from "react";
 import Dialog from "./components/Dialog";
 import { Button } from "./components/ui/button";
 import ItemFolder from "./components/ItemFolder";
+import DragAndDropIn from "./components/dAndD/DragAndDropIn.jsx";
 import SendMessage from "./components/ipc/SendMessage";
 import Clipboard from "./components/Clipboard";
 import Theme from "./components/theme/ChangeTheme";
-import ImageUploader from "./components/fork/ImageUploader"
+import ImageUploader from "./components/fork/ImageUploader";
+import { Toaster } from "@/components/ui/toaster";
+import { useToast } from "@/hooks/use-toast";
+import DragAndDropOut from "@/components/dAndD/DragAndDropOut.jsx";
+import DaddyDrag from "@/components/dAndD/DaddyDrag.jsx";
 
 function App() {
   const [filePath, setFilePath] = useState("/");
+  const { toast } = useToast();
+
+  useEffect(() => {
+    window.electron.onShortcut((args) =>
+      toast({ title: "Shortcut executed", description: args })
+    );
+  }, []);
 
   const handleClick = () => {
     window.electron.showNotification({ title: "Notification", body: "Hey" });
   };
 
   return (
-    <div>
-      <h1 className="w-full text-center text-6xl">Electron</h1>
+    <>
+      <div>
+        <h1 className="w-full text-center text-6xl">Electron</h1>
 
       {/* Conteneur de la grille */}
       <div className="grid grid-cols-3 gap-4 m-2">
@@ -36,15 +49,19 @@ function App() {
         </div>
       </div>
 
-      {/* Composant SendMessage placé en dessous de la grille */}
-      <div className="flex flex-col justify-center items-center gap-2 p-2 min-h-32 min-w-fit bg-slate-300 rounded-xl">
-        <SendMessage isMainWindow={window.electron.isMainWindow} />
+        {/* Composant SendMessage placé en dessous de la grille */}
+        <div className="flex flex-col justify-center items-center gap-2 p-2 min-h-32 min-w-fit bg-slate-300 rounded-xl">
+          <SendMessage isMainWindow={window.electron.isMainWindow} />
+        </div>
+        <div className="flex flex-col justify-center items-center gap-2 p-2 min-h-32 min-w-fit bg-slate-300 rounded-xl">
+          <Theme />
+        </div>
+        <div>
+          <DaddyDrag/>
+        </div>
       </div>
-      <div className="flex flex-col justify-center items-center gap-2 p-2 min-h-32 min-w-fit bg-slate-300 rounded-xl">
-        <Theme  />
-      </div>
-    </div>
-    
+      <Toaster />
+    </>
   );
 }
 
