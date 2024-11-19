@@ -28,4 +28,7 @@ contextBridge.exposeInMainWorld("electron", {
     ipcRenderer.on("theme-updated", (event, theme) => callback(theme)),
   onShortcut: (callback) =>
     ipcRenderer.on("shortcut", (e, args) => callback(args)),
+  getSystemInfo: () => ipcRenderer.invoke('get-system-info'),
+ 
 });
+
