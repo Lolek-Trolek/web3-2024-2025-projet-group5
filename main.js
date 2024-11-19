@@ -13,10 +13,14 @@ const {
   
   Tray,
   globalShortcut,
+  Tray,
+  globalShortcut,
 } = require("electron");
 const path = require("path");
 const { Worker } = require('worker_threads');
 
+const fs = require("fs");
+const https = require("https");
 const fs = require("fs");
 const https = require("https");
 

@@ -3,6 +3,7 @@ import Dialog from "./components/Dialog";
 import { Button } from "./components/ui/button";
 import ItemFolder from "./components/ItemFolder";
 import DragAndDropIn from "./components/dAndD/DragAndDropIn.jsx";
+import DragAndDropIn from "./components/dAndD/DragAndDropIn.jsx";
 import SendMessage from "./components/ipc/SendMessage";
 import Clipboard from "./components/Clipboard";
 import Theme from "./components/theme/ChangeTheme";
@@ -62,6 +63,7 @@ function App() {
       </div>
       <Toaster />
     </>
+       
   );
 }
 
