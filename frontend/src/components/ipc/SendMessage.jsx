@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 
+
 function SendMessage({ isMainWindow }) {
   const [message, setMessage] = useState("");
   const [inputMessage, setInputMessage] = useState(""); // État pour stocker le message saisi
@@ -52,14 +53,32 @@ function SendMessage({ isMainWindow }) {
     setInputMessage(""); // Réinitialiser le champ de saisie après l'envoi
   };
 
-  const downloadDialogues = () => {
+  const downloadDialogues = async () => {
+    //Notification dialogue n'est disponible
+    if (dialogues.length === 0) {
+      window.electron.showNotification({ title: "Notification", body: "Aucun dialogue à télécharger !" });
+      return;
+    }
     // Convertir les dialogues en texte
     const dialogueText = dialogues
       .map((d) => `${d.source}: ${d.content}`)
       .join("\n");
 
-    // Envoyer la commande au processus principal pour sauvegarder
-    window.electron.downloadTextFile(dialogueText, "dialogues.txt");
+    // Envoyer la commande au processus principal pour sauvegarder et gestion du téléchargement
+    try {
+      const response = await window.electron.downloadTextFile(dialogueText, "dialogues.txt");
+      if (response.success) {
+        window.electron.showNotification({ title: "Notification", body: "Fichier téléchargé avec succès !" });
+        return;
+      } else {
+        window.electron.showNotification({ title: "Notification", body: "Le téléchargement a été annulé ou a échoué." });
+        return;
+      }
+    } catch (error) {
+      console.error("Erreur lors du téléchargement :", error);
+      window.electron.showNotification({ title: "Notification", body: "Une erreur est survenue lors du téléchargement." });
+      return;
+    }
   };
 
   return (
