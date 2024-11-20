@@ -242,6 +242,7 @@ ipcMain.handle('download-text-file', async (event, content, fileName) => {
   } else {
     return { success: false };
   }
+});
   
 ipcMain.handle('process-image', async (event, imagePath) => {
   return new Promise((resolve, reject) => {
