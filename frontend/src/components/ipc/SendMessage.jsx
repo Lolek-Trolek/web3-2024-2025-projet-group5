@@ -11,12 +11,22 @@ function SendMessage({ isMainWindow }) {
     if (isMainWindow) {
       window.electron.onMessageFromSecond((_, msg) =>{ 
         setMessage(msg);
-        setDialogues((prev) => [...prev, { source: "Second Window", content: msg }]);
+        setDialogues((prev) => {
+          const isDuplicate = prev.some(
+            (dialogue) => dialogue.source === "Second Window" && dialogue.content === msg
+          );
+          return isDuplicate ? prev : [...prev, { source: "Second Window", content: msg }];
+        });
       });
     } else {
       window.electron.onMessageFromMain((_, msg) => {
         setMessage(msg);
-        setDialogues((prev) => [...prev, { source: "Main Window", content: msg }]);
+        setDialogues((prev) => {
+          const isDuplicate = prev.some(
+            (dialogue) => dialogue.source === "Second Window" && dialogue.content === msg
+          );
+          return isDuplicate ? prev : [...prev, { source: "Second Window", content: msg }];
+        });
       });
     }
   }, [isMainWindow]);
@@ -24,10 +34,20 @@ function SendMessage({ isMainWindow }) {
   const sendMessage = () => {
     if (isMainWindow) {
       window.electron.sendMessageToSecondWindow(inputMessage || "Hello from Main Window");
-      setDialogues((prev) => [...prev, { source: "Main Window", content: inputMessage || "Hello from Main Window" }]);
+      setDialogues((prev) => {
+        const isDuplicate = prev.some(
+          (dialogue) => dialogue.source === "Main Window" && dialogue.content === inputMessage
+        );
+        return isDuplicate ? prev : [...prev, { source: "Main Window", content: inputMessage }];
+      });
     } else {
       window.electron.sendMessageToMainWindow(inputMessage || "Hello from Second Window");
-      setDialogues((prev) => [...prev, { source: "Second Window", content: inputMessage || "Hello from Second Window" }]);
+      setDialogues((prev) => {
+        const isDuplicate = prev.some(
+          (dialogue) => dialogue.source === "Main Window" && dialogue.content === inputMessage
+        );
+        return isDuplicate ? prev : [...prev, { source: "Main Window", content: inputMessage }];
+      });
     }
     setInputMessage(""); // Réinitialiser le champ de saisie après l'envoi
   };
