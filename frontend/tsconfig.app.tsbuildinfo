@@ -1,10 +1,11 @@
-{
-  "root": [
-    "./src/main.tsx",
-    "./src/vite-env.d.ts",
-    "./src/components/ui/button.tsx",
-    "./src/lib/utils.ts"
-  ],
-  "errors": true,
-  "version": "5.6.3"
-}
+{"root": [
+  "./src/vite-env.d.ts",
+  "./src/components/ui/button.tsx",
+  "./src/components/ui/input.tsx",
+  "./src/components/ui/scroll-area.tsx",
+  "./src/components/ui/select.tsx",
+  "./src/components/ui/toast.tsx",
+  "./src/components/ui/toaster.tsx",
+  "./src/hooks/use-toast.ts",
+  "./src/lib/utils.ts"]
+  ,"version":"5.6.3"}

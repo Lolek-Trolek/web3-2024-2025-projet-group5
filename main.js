@@ -228,6 +228,21 @@ nativeTheme.on("updated", () => {
   mainWindow.webContents.send("theme-updated", isDarkMode ? "dark" : "light");
 });
 
+ipcMain.handle('download-text-file', async (event, content, fileName) => {
+  const { filePath } = await dialog.showSaveDialog({
+    title: 'Save Dialogues',
+    defaultPath: path.join(require('os').homedir(), fileName),
+    buttonLabel: 'Save',
+    filters: [{ name: 'Text Files', extensions: ['txt'] }],
+  });
+
+  if (filePath) {
+    fs.writeFileSync(filePath, content, 'utf-8');
+    return { success: true };
+  } else {
+    return { success: false };
+  }
+  
 ipcMain.handle('process-image', async (event, imagePath) => {
   return new Promise((resolve, reject) => {
     const worker = new Worker(path.join(__dirname, 'imageProcessor.js'));

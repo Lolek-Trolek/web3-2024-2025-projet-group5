@@ -31,7 +31,8 @@ contextBridge.exposeInMainWorld("electron", {
     ipcRenderer.on("shortcut", (e, args) => callback(args)),
   onShortcut: (callback) =>
     ipcRenderer.on("shortcut", (e, args) => callback(args)),
+  downloadTextFile: (content, fileName) => 
+    ipcRenderer.invoke("download-text-file", content, fileName),
   getSystemInfo: () => ipcRenderer.invoke('get-system-info'),
- 
 });
 
