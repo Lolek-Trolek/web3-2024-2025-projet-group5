@@ -8,12 +8,18 @@ const {
   shell,
   clipboard,
   nativeTheme,
+  utilityProcess,
   Tray,
   globalShortcut,
+
 } = require("electron");
 const path = require("path");
+const { Worker } = require('worker_threads');
+
 const fs = require("fs");
 const https = require("https");
+const si = require("systeminformation");
+const os = require("os");
 
 const isDev = !app.isPackaged;
 
@@ -106,6 +112,35 @@ ipcMain.on("ondragstart", (event, filePath) => {
     icon: iconName,
   });
 });
+
+// System Info
+ipcMain.handle('get-system-info', async () => {
+  const totalMemory = os.totalmem();
+  const freeMemory = os.freemem();
+  const memoryUsage = ((totalMemory - freeMemory) / totalMemory) * 100;
+
+  const cpu = await si.currentLoad();
+  const battery = await si.battery();
+
+  const data = {
+    cpu: {
+      currentLoad: cpu.currentLoad.toFixed(2),
+    },
+    memory: {
+      totalMemory: (totalMemory / (1024 * 1024 * 1024)).toFixed(2),
+      usedMemory: ((totalMemory - freeMemory) / (1024 * 1024 * 1024)).toFixed(2),
+      freeMemory: (freeMemory / (1024 * 1024 * 1024)).toFixed(2),
+      memoryUsage: memoryUsage.toFixed(2)
+    },
+    battery: {
+      percent: battery.percent,
+      isCharging: battery.isCharging,
+    }
+  };
+
+  return data;
+});
+
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
@@ -207,4 +242,33 @@ ipcMain.handle('download-text-file', async (event, content, fileName) => {
   } else {
     return { success: false };
   }
+  
+ipcMain.handle('process-image', async (event, imagePath) => {
+  return new Promise((resolve, reject) => {
+    const worker = new Worker(path.join(__dirname, 'imageProcessor.js'));
+
+    // Envoyer le chemin de l'image au worker
+    worker.postMessage({ imagePath });
+
+    // Gérer le message reçu du worker
+    worker.on('message', () => {
+      // Envoyer uniquement le nom du fichier pour éviter les erreurs côté client
+      console.log("reponse du worker");
+      resolve();
+    });
+
+    // Gérer les erreurs du worker
+    worker.on('error', (error) => {
+      console.error("Erreur du worker :", error);
+      reject(error); // Rejeter la promesse en cas d'erreur
+    });
+
+    // Gérer la fermeture du worker
+    worker.on('exit', (code) => {
+      if (code !== 0) {
+        console.error(`Worker arrêté avec le code de sortie ${code}`);
+        reject(new Error(`Worker exited with code ${code}`));
+      }
+    });
+  });
 });
