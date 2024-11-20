@@ -28,4 +28,6 @@ contextBridge.exposeInMainWorld("electron", {
     ipcRenderer.on("theme-updated", (event, theme) => callback(theme)),
   onShortcut: (callback) =>
     ipcRenderer.on("shortcut", (e, args) => callback(args)),
+  downloadTextFile: (content, fileName) => 
+    ipcRenderer.invoke("download-text-file", content, fileName),
 });
